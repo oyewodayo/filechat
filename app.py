@@ -77,6 +77,7 @@ def user_input(user_question):
 
 
 def main():
+    
     st.header("Chat with your file")
 
     user_question = st.text_input("Ask a qestion from your Files")
@@ -94,6 +95,10 @@ def main():
                 text_chuncks = get_text_chuncks(raw_text)
                 get_vector_store(text_chuncks)
                 st.success("Done")
+        
+        
+        add_vertical_space(5)
+        st.write('Made by [Temidayo Oyewo](https://x.com/oyewodayo)')
 
 if __name__ == '__main__':
     main()
