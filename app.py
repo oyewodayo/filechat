@@ -33,7 +33,7 @@ def get_text_chuncks(text):
     return chuncks
 
 def get_vector_store(text_chunks):
-    embeddings = GoogleGenerativeAIEmbeddings(model="text-embedding-004")
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
     try:
         vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     except Exception as e:
@@ -53,22 +53,22 @@ def get_conversational_chain():
     Answer: 
     """
 
-    model = ChatGoogleGenerativeAI(model="gemini-pro",temperature=0.3)
+    model = ChatGoogleGenerativeAI(model="models/embedding-001",temperature=0.3)
 
     prompt = PromptTemplate(template=prompt_templates, input_variables=["context","question"])
     chain = load_qa_chain(model, chain_type="stuff",prompt=prompt)
     return chain
 
 def user_input(user_question):
-    embeddings = GoogleGenerativeAIEmbeddings(model = "text-embedding-004")
+    embeddings = GoogleGenerativeAIEmbeddings(model = "models/embedding-001")
 
-    new_db = FAISS.load_local("faiss_index", embeddings)
+    new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(user_question)
 
     chain = get_conversational_chain()
 
     response = chain(
-        {"input_documentd":docs, "question":user_question},
+        {"input_documents":docs, "question":user_question},
         return_only_outputs=True
     )
     print(response)
